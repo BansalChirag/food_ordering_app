@@ -18,7 +18,6 @@ import useAuthStore from "@/store/auth.store";
 
 export default function Index() {
   const { user } = useAuthStore();
-  console.log("🚀 ~ Index ~ user:", "USER : ", JSON.stringify(user, null, 2));
 
   return (
     <SafeAreaView>

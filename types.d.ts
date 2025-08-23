@@ -27,3 +27,9 @@ interface AuthParams {
   password: string;
   name?: string;
 }
+
+interface TabBarIconProps {
+  focused: boolean;
+  icon: ImageSourcePropType;
+  title: string;
+}
