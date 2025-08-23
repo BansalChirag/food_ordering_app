@@ -2,6 +2,7 @@ import { offers } from "@/constants";
 import { icons } from "@/constants/imageAssets";
 import { Fragment } from "react";
 import {
+  Button,
   FlatList,
   Image,
   Pressable,
@@ -12,8 +13,13 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import cn from "clsx";
 import CartButton from "@/components/CartButton";
+import * as Sentry from "@sentry/react-native";
+import useAuthStore from "@/store/auth.store";
 
 export default function Index() {
+  const { user } = useAuthStore();
+  console.log("🚀 ~ Index ~ user:", "USER : ", JSON.stringify(user, null, 2));
+
   return (
     <SafeAreaView>
       {/* <View className="flex-between flex-row w-full my-5 px-5">
@@ -94,6 +100,14 @@ export default function Index() {
             <CartButton />
           </View>
         )}
+        // ListFooterComponent={() => (
+        //   <Button
+        //     title="Try!"
+        //     onPress={() => {
+        //       Sentry.captureException(new Error("First error"));
+        //     }}
+        //   />
+        // )}
       />
     </SafeAreaView>
   );

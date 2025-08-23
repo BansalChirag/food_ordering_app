@@ -7,9 +7,10 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants1/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import useAuthStore from "@/store/auth.store";
 
 export default function TabLayout() {
-  const isAuthenticated = true;
+  const { isAuthenticated } = useAuthStore();
 
   if (!isAuthenticated) return <Redirect href="/sign-in" />;
 
