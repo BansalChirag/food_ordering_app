@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 import { getCurrentUser } from "@/lib/appwrite";
+import { User } from "@/types";
 
 type AuthState = {
   isAuthenticated: boolean;
