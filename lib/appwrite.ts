@@ -4,6 +4,7 @@ import {
   Avatars,
   Client,
   Databases,
+  Functions,
   ID,
   Query,
   Storage,
@@ -20,6 +21,7 @@ export const appwriteConfig = {
   menuCollectionId: "68a9ac9e0030f6824572",
   customizationsCollectionId: "68a9cb71000da079da08",
   menuCustomizationsCollectionId: "68a9cc4c001a4d017a43",
+  orderCollectionId: "68ab13a000320cfeeda6",
 };
 
 export const client = new Client();
@@ -33,6 +35,8 @@ export const account = new Account(client);
 export const databases = new Databases(client);
 
 const avatars = new Avatars(client);
+
+export const functions = new Functions(client);
 
 export const storage = new Storage(client);
 
@@ -120,6 +124,89 @@ export const getCategories = async () => {
 
     return categories.documents;
   } catch (e) {
+    throw new Error(e as string);
+  }
+};
+
+// Add order creation function
+export const createOrder = async (orderData: {
+  payment_id: string;
+  total_amount: number;
+  total_items: number;
+  items: string;
+  status?: string;
+  delivery_fee?: number;
+  discount?: number;
+  users: string;
+  cust_name: string;
+  cust_email: string;
+  order_number: string;
+  payment_method?: string;
+  payment_status?: string;
+  order_status?: string;
+  customer_phone?: string;
+  delivery_address?: string;
+}) => {
+  try {
+    const order = await databases.createDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.orderCollectionId,
+      ID.unique(),
+      {
+        payment_id: orderData.payment_id,
+        total_amount: orderData.total_amount,
+        total_items: orderData.total_items,
+        items: orderData.items,
+        status: orderData.status || "confirmed",
+        delivery_fee: orderData.delivery_fee || 0,
+        discount: orderData.discount || 0,
+        users: orderData.users,
+        cust_name: orderData.cust_name,
+        cust_email: orderData.cust_email,
+        order_number: orderData.order_number,
+        payment_method: orderData.payment_method || "stripe",
+        payment_status: orderData.payment_status || "paid",
+        order_status: orderData.order_status || "pending",
+        customer_phone: orderData.customer_phone || "",
+        delivery_address: orderData.delivery_address || "",
+      }
+    );
+
+    return order;
+  } catch (e) {
+    console.error("Failed to create order:", e);
+    throw new Error(e as string);
+  }
+};
+
+// Optional: Get user orders
+export const getUserOrders = async (userId: string) => {
+  try {
+    const orders = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.orderCollectionId,
+      [Query.equal("users", userId), Query.orderDesc("$createdAt")]
+    );
+
+    return orders.documents;
+  } catch (e) {
+    console.error("Failed to get user orders:", e);
+    throw new Error(e as string);
+  }
+};
+
+// Optional: Get single order
+export const getOrder = async (orderId: string) => {
+  try {
+    const order = await databases.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.orderCollectionId,
+      orderId
+    );
+
+    return order;
+  } catch (e) {
+    console.error("Failed to get order:", e);
     throw new Error(e as string);
   }
 };

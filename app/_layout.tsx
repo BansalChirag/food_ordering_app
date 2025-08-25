@@ -4,6 +4,7 @@ import "./globals.css";
 import { useEffect } from "react";
 import * as Sentry from "@sentry/react-native";
 import useAuthStore from "@/store/auth.store";
+import { StripeProvider } from "@stripe/stripe-react-native";
 
 Sentry.init({
   dsn: "https://9a6410b3147885cc0663d97246eeab05@o4509892764172288.ingest.us.sentry.io/4509892768956416",
@@ -46,5 +47,12 @@ export default Sentry.wrap(function RootLayout() {
 
   if (!fontsLoaded || isLoading) return null;
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <StripeProvider
+      publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
+      urlScheme="fooddeliveryapp1"
+    >
+      <Stack screenOptions={{ headerShown: false }} />
+    </StripeProvider>
+  );
 });

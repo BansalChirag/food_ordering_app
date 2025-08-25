@@ -17,7 +17,12 @@ import CustomInput from "@/components/CustomInput";
 import useAuthStore from "@/store/auth.store";
 
 const AuthLayout = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, isLoading } = useAuthStore();
+
+  // Wait for loading to complete before redirecting
+  if (isLoading) return null; // or a loading spinner
+
+  if (isAuthenticated) return <Redirect href="/" />;
 
   if (isAuthenticated) return <Redirect href="/" />;
   return (
